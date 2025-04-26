@@ -1,5 +1,6 @@
 // There is a Node SDK available, maybe use it later: https://github.com/tiagosiebler/bybit-api
 
+import axios from 'axios';
 import { signMessage } from './cryptoUtils';
 import { serializeParams, buildRequestUrl } from './requestUtils';
 import config from '../../config/config';
@@ -55,8 +56,8 @@ export class ByBitApi {
     params: object,
   ): Promise<ByBitApiResponse<object>> {
     const { url, requestOptions } = await this.prepareRequest(path, params);
-    const response = await fetch(url, requestOptions);
-    return await response.json();
+    const response = await axios.get(url, requestOptions);
+    return response.data;
   }
 
   private async prepareRequest(path: string, params: object = {}) {
