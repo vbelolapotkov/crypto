@@ -8,15 +8,16 @@ import {
   ByBitApiResponse,
   ByBitWalletBalance,
 } from '../../../src/lib/bybit/bybitTypes';
+import axios from 'axios';
 
 // Only mock config to avoid using real API credentials
 jest.mock('../../../src/config/config', () => ({
   bybitApiSecret: 'test-api-secret',
 }));
 
-// Mock fetch globally
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+// Mock axios instead of fetch
+jest.mock('axios');
+const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe('ByBitApi', () => {
   const mockApiKey = 'test-api-key';
@@ -26,7 +27,7 @@ describe('ByBitApi', () => {
   let api: ByBitApi;
 
   beforeEach(() => {
-    // Reset fetch mock
+    // Reset axios mock
     jest.clearAllMocks();
 
     // Mock Date.now()
@@ -81,9 +82,7 @@ describe('ByBitApi', () => {
     };
 
     beforeEach(() => {
-      mockFetch.mockResolvedValue({
-        json: () => Promise.resolve(mockResponse),
-      });
+      mockAxios.get.mockResolvedValue({ data: mockResponse });
     });
 
     it('should make a request with correct parameters and headers', async () => {
@@ -104,8 +103,8 @@ describe('ByBitApi', () => {
         mockApiSecret,
       );
 
-      // Verify fetch was called with correct URL and headers
-      expect(mockFetch).toHaveBeenCalledWith(expectedUrl, {
+      // Verify axios was called with correct URL and headers
+      expect(mockAxios.get).toHaveBeenCalledWith(expectedUrl, {
         headers: {
           'X-BAPI-SIGN-TYPE': '2',
           'X-BAPI-API-KEY': mockApiKey,
@@ -130,16 +129,14 @@ describe('ByBitApi', () => {
         extExtInfo: {},
       };
 
-      mockFetch.mockResolvedValue({
-        json: () => Promise.resolve(errorResponse),
-      });
+      mockAxios.get.mockResolvedValue({ data: errorResponse });
 
       const response = await api.getWalletBalance();
       expect(response).toEqual(errorResponse);
     });
 
     it('should handle network errors', async () => {
-      mockFetch.mockRejectedValue(new Error('Network error'));
+      mockAxios.get.mockRejectedValue(new Error('Network error'));
 
       await expect(api.getWalletBalance()).rejects.toThrow('Network error');
     });
