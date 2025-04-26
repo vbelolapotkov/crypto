@@ -5,5 +5,9 @@ export function serializeParams(params: object) {
 }
 
 export function buildRequestUrl(baseURL: string, path: string, query: string) {
-  return query ? `${baseURL}${path}?${query}` : `${baseURL}${path}`;
+  // Ensure path starts with a forward slash
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return query
+    ? `${baseURL}${normalizedPath}?${query}`
+    : `${baseURL}${normalizedPath}`;
 }
