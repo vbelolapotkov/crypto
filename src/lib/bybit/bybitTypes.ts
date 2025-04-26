@@ -6,42 +6,57 @@ export type ByBitApiResponse<T> = {
   time: number;
 };
 
+export type ByBitWalletBalanceResult = {
+  list: Array<ByBitWalletBalance>;
+};
+
 export type ByBitWalletBalance = {
-  list: Array<{
-    totalEquity: number;
-    accountIMRate: number;
-    totalMarginBalance: number;
-    totalInitialMargin: number;
-    accountType: string;
-    totalAvailableBalance: number;
-    accountMMRate: number;
-    totalPerpUPL: number;
-    totalWalletBalance: number;
-    accountLTV: number;
-    totalMaintenanceMargin: number;
-    coin: Array<ByBitWalletCoin>;
-  }>;
+  totalEquity: number;
+  accountIMRate: number;
+  totalMarginBalance: number;
+  totalInitialMargin: number;
+  accountType: string;
+  totalAvailableBalance: number;
+  accountMMRate: number;
+  totalPerpUPL: number;
+  totalWalletBalance: number;
+  accountLTV: number;
+  totalMaintenanceMargin: number;
+  coin: Array<ByBitWalletCoin>;
 };
 
 export type ByBitWalletCoin = {
-  availableToBorrow: string;
+  availableToBorrow: number;
   bonus: string;
   accruedInterest: string;
-  availableToWithdraw: string;
+  availableToWithdraw: number;
   totalOrderIM: string;
   equity: string;
   totalPositionMM: string;
-  usdValue: string;
-  unrealisedPnl: string;
+  usdValue: number;
+  unrealisedPnl: number;
   collateralSwitch: boolean;
-  spotHedgingQty: string;
-  borrowAmount: string;
-  totalPositionIM: string;
-  walletBalance: string;
-  cumRealisedPnl: string;
-  locked: string;
+  spotHedgingQty: number;
+  borrowAmount: number;
+  totalPositionIM: number;
+  walletBalance: number;
+  cumRealisedPnl: number;
+  locked: number;
   marginCollateral: boolean;
   coin: string;
+};
+
+export type ByBitAllCoinsBalanceResult = {
+  memberId: string;
+  accountType: string;
+  balance: Array<ByBitCoinBalance>;
+};
+
+export type ByBitCoinBalance = {
+  coin: string;
+  transferableBalance: number;
+  walletBalance: number;
+  bonus: string;
 };
 
 export type ByBitSignatureParams = {
