@@ -1,6 +1,6 @@
 import express from 'express';
 import { errorHandler } from './middlewares/errorHandler';
-import bybitApi from './lib/bybit/api';
+import bybitRoutes from './routes/bybit';
 
 const app = express();
 
@@ -13,9 +13,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/wallet-balance', async (req, res) => {
-  const responseData = await bybitApi.getWalletBalance();
-  res.send(responseData);
-});
+app.use('/bybit', bybitRoutes);
 
 export default app;
